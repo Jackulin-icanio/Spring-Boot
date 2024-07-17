@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main #branch name
+      - main # Branch name
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          
+
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
@@ -30,3 +30,12 @@ jobs:
           docker build -t $DOCKER_USERNAME/demo .
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker push $DOCKER_USERNAME/demo
+
+      - name: Send Notification to Google Chat
+        env:
+          GOOGLE_CHAT_WEBHOOK: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+        run: |
+          MESSAGE="Build and deploy completed successfully!"
+          curl -X POST -H 'Content-Type: application/json' \
+          -d "{\"text\": \"${MESSAGE}\"}" \
+          $GOOGLE_CHAT_WEBHOOK
