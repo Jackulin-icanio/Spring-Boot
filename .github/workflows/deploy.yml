@@ -24,8 +24,8 @@ jobs:
 
       - name: Deploy to Docker
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.jackulin123 }}
+          DOCKER_PASSWORD: ${{ secrets.Jack@2205 }}
         run: |
           docker build -t $DOCKER_USERNAME/demo .
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
