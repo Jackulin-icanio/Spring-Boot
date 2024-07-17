@@ -1,4 +1,4 @@
-# Use a base image with Java 21 on Alpine Linux
+# Use a base image with Java 17 on Alpine Linux
 FROM openjdk:17-jdk-alpine
 
 # Set the working directory in the container
