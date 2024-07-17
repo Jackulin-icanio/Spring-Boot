@@ -32,7 +32,7 @@ jobs:
         run: docker push ${{ secrets.Name }}/demo
 
       - name: Run Docker Container
-        run: docker run -d -p 9090:9090 --name demo-container ${{ secrets.Name }}/demo
+        run: docker run -d -p 9090:9090 ${{ secrets.Name }}/demo
 
       - name: Send Notification to Google Chat
         env:
