@@ -22,20 +22,23 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Deploy to Docker
-        env:
-          DOCKER_USERNAME: ${{ secrets.Name }}
-          DOCKER_PASSWORD: ${{ secrets.Password }}
-        run: |
-          docker build -t $DOCKER_USERNAME/demo .
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push $DOCKER_USERNAME/demo
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.Name }}/demo .
+
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.Password }} | docker login -u ${{ secrets.Name }} --password-stdin
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.Name }}/demo
+
+      - name: Run Docker Container
+        run: docker run -d -p 9090:9090 --name demo-container ${{ secrets.Name }}/demo
 
       - name: Send Notification to Google Chat
         env:
           GOOGLE_CHAT_WEBHOOK: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
         run: |
-          MESSAGE="Build and deploy completed successfully!"
+          MESSAGE="Build and deploy completed successfully! The application is running at http://localhost:9090/hello"
           curl -X POST -H 'Content-Type: application/json' \
           -d "{\"text\": \"${MESSAGE}\"}" \
           $GOOGLE_CHAT_WEBHOOK
